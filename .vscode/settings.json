@@ -1,0 +1,7 @@
+{
+  "rust-analyzer.linkedProjects": [
+    "./projects/01_gpu_check/Cargo.toml",
+    "./projects/02_map_benchmark/Cargo.toml",
+    "./projects/03_matmul_tiled/Cargo.toml"
+  ]
+}

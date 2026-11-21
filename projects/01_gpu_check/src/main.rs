@@ -8,7 +8,7 @@ fn main() {
 }
 
 async fn run() {
-    println!("=== Перевірка підтримки GPGPU через wgpu ===");
+    println!("=== Проект 1: Перевірка підтримки GPGPU через wgpu ===");
 
     // 1. Ініціалізуємо екземпляр wgpu з бекендами за замовчуванням (DX12/Vulkan на Windows, Vulkan на Linux, Metal на macOS)
     let instance = wgpu::Instance::default();

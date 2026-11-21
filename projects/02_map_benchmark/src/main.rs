@@ -316,6 +316,12 @@ fn main() {
     for &n in &sizes {
         let input: Vec<f32> = (0..n).map(|i| ((i % 1000) as f32) * 0.005).collect();
 
+        // Виконуємо GPU-замір до тривалих CPU-тестів, щоб мобільна відеокарта
+        // не переходила в енергоощадний стан (P8) під час очікування CPU
+        let (res_gpu, t_gpu_kernel, t_gpu_total) = gpu.run_benchmark(&input);
+        // Гарантуємо звільнення тимчасових буферів VRAM перед наступним заміром
+        let _ = gpu.device.poll(wgpu::PollType::wait_indefinitely());
+
         let t1_start = Instant::now();
         let res_cpu_1t = cpu_single_thread(&input);
         let t_cpu_1t = t1_start.elapsed().as_secs_f64() * 1000.0;
@@ -323,10 +329,6 @@ fn main() {
         let mt_start = Instant::now();
         let res_cpu_mt = cpu_multi_thread(&input, num_threads);
         let t_cpu_mt = mt_start.elapsed().as_secs_f64() * 1000.0;
-
-        let (res_gpu, t_gpu_kernel, t_gpu_total) = gpu.run_benchmark(&input);
-        // Гарантуємо звільнення тимчасових буферів VRAM перед наступним заміром
-        let _ = gpu.device.poll(wgpu::PollType::wait_indefinitely());
 
         let max_err = res_cpu_1t
             .iter()
